@@ -7,8 +7,8 @@ import Member from './Member';
 import styled from 'styled-components';
 const getDefaultMember = () =>{
     return{
-        ['first name']:'',
-        ['last name']:'',
+        'first name':'',
+        'last name':'',
         email:'',
         role:'',
         hobby:'',
