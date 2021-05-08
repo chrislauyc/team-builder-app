@@ -5,7 +5,6 @@ import {
 } from '@material-ui/core';
 import Member from './Member';
 import styled from 'styled-components';
-// import {makeStyles} from '@material-ui/core/styles';
 const getDefaultMember = () =>{
     return{
         ['first name']:'',
