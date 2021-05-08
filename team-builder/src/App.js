@@ -24,8 +24,8 @@ function App() {
         <Header />
       </header>
       <main>
-        <MemberList members={members} headers={Object.keys(getDefaultMember())}></MemberList>
-        <EditMember addMember={addMember} getDefaultMember={getDefaultMember}></EditMember>
+        <MemberList members={members} getDefaultMember={getDefaultMember}></MemberList>
+        {/* <EditMember addMember={addMember} getDefaultMember={getDefaultMember}></EditMember> */}
       </main>
     </div>
   );
