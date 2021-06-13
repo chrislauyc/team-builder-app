@@ -1,59 +1,36 @@
-import React, {useState} from 'react';
-import uuid from 'react-uuid';
+import React from 'react';
 import {
     Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, Button
 } from '@material-ui/core';
 import Member from './Member';
+import useList from '../hooks/useList';
 import styled from 'styled-components';
-const getDefaultMember = () =>{
-    return{
-        'first name':'',
-        'last name':'',
-        email:'',
-        role:'',
-        hobby:'',
-        gender:''
-    };
+const initialValue = {
+    'first name':'',
+    'last name':'',
+    email:'',
+    role:'',
+    hobby:'',
+    gender:''
   };
 function MemberList(){
-    const [members, setMembers] = useState([]);
-    const [editIndex, setEditIndex] = useState(null);
-    const headers = Object.keys(getDefaultMember());
-    const addNewRow = () => {
-        setEditIndex(members.length);
-        setMembers([...members,getDefaultMember()]);
-    };
-    const deleteRow = (index) => {
-        setEditIndex(null);
-        setMembers(members.filter((member,i)=>i!==index));
-    };
-    const updateRow = (newMember,index) => {
-        setEditIndex(null);
-        return setMembers(members.map((member,i)=>{
-            if(index===i){
-                return newMember;
-            }
-            else{
-                return member;
-            }
-        }));
-    };
+    const [members,editIndex,setEditIndex,headers,addNewRow,deleteRow,updateRow] = useList(initialValue);
     return(
         <TableContainer component={Paper}>
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
-                        <StyledCell key={uuid()}>Index</StyledCell>
+                        <StyledCell>Index</StyledCell>
                         {
-                            headers.map((h)=><StyledCell key={uuid()}>{h}</StyledCell>)
+                            headers().map((h,i)=><StyledCell key={i}>{h}</StyledCell>)
                         }
-                        <StyledCell key={uuid()}></StyledCell>
+                        <StyledCell></StyledCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {
                         members.map((member,i)=>(
-                        <TableRow key={uuid()}>
+                        <TableRow key={i}>
                             <Member data={member} editIndex={editIndex} setEditIndex={setEditIndex} updateRow={updateRow} deleteRow={deleteRow} index={i}></Member>
                         </TableRow>
                         ))
