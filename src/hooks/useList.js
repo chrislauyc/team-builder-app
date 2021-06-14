@@ -1,9 +1,10 @@
 import {useState} from 'react';
-
+import {useLocalStorage} from './useLocalStorage';
 export const useList=(initialValue)=>{
-    const [members, setMembers] = useState([]);
+    const [localStorage, setLocalStorage] = useLocalStorage('team-builder-app',[])
+    const [members, setMembers] = useState(localStorage);
     const [editIndex, setEditIndex] = useState(null);
-    const [template, setTemplate] = useState(initialValue)
+    const [template, setTemplate] = useState(initialValue);
     const headers = ()=>{
         return Object.keys(template);
     }
@@ -13,18 +14,22 @@ export const useList=(initialValue)=>{
     };
     const deleteRow = (index) => {
         setEditIndex(null);
-        setMembers(members.filter((member,i)=>i!==index));
+        const newMembers = members.filter((member,i)=>i!==index);
+        setLocalStorage(newMembers)
+        setMembers(newMembers);
     };
     const updateRow = (newMember,index) => {
         setEditIndex(null);
-        return setMembers(members.map((member,i)=>{
+        const newMembers = members.map((member,i)=>{
             if(index===i){
                 return newMember;
             }
             else{
                 return member;
             }
-        }));
+        });
+        setLocalStorage(newMembers);
+        return setMembers(newMembers);
     };
     return[members,editIndex,setEditIndex,headers,addNewRow,deleteRow,updateRow];
 } 

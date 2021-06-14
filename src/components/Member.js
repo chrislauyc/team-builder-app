@@ -3,7 +3,7 @@ import {
     TableCell, Button, TextField
 } from '@material-ui/core';
 function Member(props){
-    const {data,editIndex,setEditIndex,index,updateRow,deleteRow} = props;
+    const {data,editIndex,setEditIndex,index,updateRow,deleteRow,headers} = props;
     const [member,setMember] = useState(data);
     const isEditing = editIndex === index;
     const startEdit = () =>{
@@ -52,7 +52,6 @@ function Member(props){
             return <Button onClick={startEdit}>Edit</Button>
         }
     }
-    const headers = Object.keys(member);
     return(
         <>
             <TableCell>{index}</TableCell>

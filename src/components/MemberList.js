@@ -3,15 +3,14 @@ import {
     Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, Button
 } from '@material-ui/core';
 import Member from './Member';
-import useList from '../hooks/useList';
+import {useList} from '../hooks/useList';
 import styled from 'styled-components';
 const initialValue = {
     'first name':'',
     'last name':'',
     email:'',
     role:'',
-    hobby:'',
-    gender:''
+    hobby:''
   };
 function MemberList(){
     const [members,editIndex,setEditIndex,headers,addNewRow,deleteRow,updateRow] = useList(initialValue);
@@ -31,7 +30,7 @@ function MemberList(){
                     {
                         members.map((member,i)=>(
                         <TableRow key={i}>
-                            <Member data={member} editIndex={editIndex} setEditIndex={setEditIndex} updateRow={updateRow} deleteRow={deleteRow} index={i}></Member>
+                            <Member data={member} editIndex={editIndex} setEditIndex={setEditIndex} updateRow={updateRow} deleteRow={deleteRow} index={i} headers={headers()}></Member>
                         </TableRow>
                         ))
                     }

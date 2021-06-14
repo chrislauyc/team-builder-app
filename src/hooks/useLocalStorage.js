@@ -3,16 +3,29 @@ export const useLocalStorage=(key,initialValue)=>{
     const [storedValue,setStoredValue] = useState(()=>{
         const item = window.localStorage.getItem(key)
         if(item){
-            return JSON.parse(item);
+            let parsedItem;
+            try{
+                parsedItem = JSON.parse(item);
+            }
+            catch(err){
+                console.log(err);
+            }
+            if(parsedItem){
+                return parsedItem;
+            }
+            else{
+                console.log('Unable to parse string: ',item);
+                window.localStorage.removeItem(key);
+                return initialValue;
+            }
         }    
         else{
-            window.localStorage.setItem(key,JSON.stringify(initialValue));
             return initialValue;
         }
     });
     const setValue=(value)=>{
         setStoredValue(value);
-        window.localStorage.setItem(key,value);
+        window.localStorage.setItem(key,JSON.stringify(value));
     }
     return [storedValue,setValue];
 };
