@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
     TableCell, Button, TextField
 } from '@material-ui/core';
+import styled from 'styled-components';
 function Member(props){
     const {data,editIndex,setEditIndex,index,updateRow,deleteRow,headers} = props;
     const [member,setMember] = useState(data);
@@ -42,10 +43,10 @@ function Member(props){
     const makeButton = (isEditing) =>{
         if(isEditing){
             return(
-                <div>
+                <StyledDiv>
                     <Button onClick={endEdit}>Save</Button>
                     <Button onClick={deleteMember}>Delete</Button>
-                </div>
+                </StyledDiv>
             );
         }
         else{
@@ -54,7 +55,6 @@ function Member(props){
     }
     return(
         <>
-            <TableCell>{index}</TableCell>
             {
                 headers.map((h,i)=>makeCell(h,member[h],isEditing,i))
             }
@@ -65,3 +65,7 @@ function Member(props){
     );
 }
 export default Member;
+const StyledDiv=styled.div`
+    display:flex;
+    flex-direction:column;
+`;
