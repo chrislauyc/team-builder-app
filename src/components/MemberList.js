@@ -21,33 +21,30 @@ function MemberList(){
         addNewRow,
         deleteRow,
         updateRow,
-        editHeadersUtils
-    ] = useList(initialValue);
-    const {        
         isEditing,
-        editedHeaders,
         startEditing,
         cancelEditing,
-        insertHeader,
-        deleteHeader,
-        editHeader,
         saveHeaders
-    }  = editHeadersUtils;
-    const [insertButtons, setInsertButtons] = useState({});
-    const [deleteButtons, setDeleteButtons] = useState({});
-    const toggleButton=(key,state,setState)=>{
-        if(state[key]){
-            setState({...state,[key]:false});
-        }
-        else{
-            setState({...state,[key]:true});
-        }
+    ] = useList(initialValue);
+    const [insertButtons, setInsertButtons] = useState(()=>headers().map((h)=>false));
+    const [deleteButtons, setDeleteButtons] = useState(()=>headers().map((h)=>false));
+    const [fieldNames, setFieldNames] = useState(headers());
+    const toggleButton=(index,arr,setArr)=>{
+        const newArr = [...arr];
+        newArr[index] = !newArr[index];
+        setArr(newArr);
+    };
+    const handleInputChange=(e)=>{
+        const {name, value} = e.target;
+        const newArr = [...fieldNames];
+        newArr[parseInt(name)] = value;
+        setFieldNames(newArr);
     };
     const makeButton = (isEditing) =>{
         if(isEditing){
             return(
                 <StyledDiv>
-                    <Button onClick={saveHeaders}>Save</Button>
+                    <Button onClick={()=>saveHeaders(insertButtons,deleteButtons,fieldNames)}>Save</Button>
                     <Button onClick={cancelEditing}>Cancel</Button>
                 </StyledDiv>
             );
@@ -59,7 +56,6 @@ function MemberList(){
     const makeHeader = ()=>{
         return(
             <TableHead>
-                {[].includes}
                 <TableRow>
                     {
                         headers().map((h,i)=>(
@@ -69,7 +65,7 @@ function MemberList(){
                                         (
                                             <Grid container direction='column'>
                                                 <Grid item>
-                                                    <TextField id='standard-basic' label={'Field Name'} value={h}></TextField>
+                                                    <TextField name={`${i}`} label={'Field Name'} value={fieldNames[i]} onChange={handleInputChange}></TextField>
                                                 </Grid>
                                                 <Grid item>
                                                     <Button variant={insertButtons[i]?'outlined':'contained'} color='primary' onClick={()=>toggleButton(i,insertButtons,setInsertButtons)}>{insertButtons[i]?'Undo':'Insert'}</Button>
