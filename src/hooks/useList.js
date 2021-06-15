@@ -79,7 +79,7 @@ export const useList=(initialValue)=>{
         setLocalStorage(newMembers);
         return setMembers(newMembers);
     };
-    const editHeaderUtils = {
+    const editHeadersUtils = {
         // headers
         isEditing,
         editedHeaders,
@@ -98,6 +98,6 @@ export const useList=(initialValue)=>{
         addNewRow,
         deleteRow,
         updateRow,
-        editHeaderUtils
+        editHeadersUtils
     ];
 } 

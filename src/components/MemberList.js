@@ -21,49 +21,59 @@ function MemberList(){
         addNewRow,
         deleteRow,
         updateRow,
+        editHeadersUtils
     ] = useList(initialValue);
-    const [isEditingHeader,setIsEditingHeader] = useState(false);
-    const [editedHeader, setEditedHeader] = useState(headers());
-    const [toInsert, setToInsert] = useState([]);
-    const [toDelete, setToDelete] = useState([]);
-    const saveHeader = ()=>{
-    }
-    const cancelEditing=()=>{
-        setIsEditingHeader(false);
-        setEditedHeader(headers());
-        setToInsert([]);
-        setToDelete([]);
+    const {        
+        isEditing,
+        editedHeaders,
+        startEditing,
+        cancelEditing,
+        insertHeader,
+        deleteHeader,
+        editHeader,
+        saveHeaders
+    }  = editHeadersUtils;
+    const [insertButtons, setInsertButtons] = useState({});
+    const [deleteButtons, setDeleteButtons] = useState({});
+    const toggleButton=(key,state,setState)=>{
+        if(state[key]){
+            setState({...state,[key]:false});
+        }
+        else{
+            setState({...state,[key]:true});
+        }
     };
     const makeButton = (isEditing) =>{
         if(isEditing){
             return(
                 <StyledDiv>
-                    <Button onClick={saveHeader}>Save</Button>
+                    <Button onClick={saveHeaders}>Save</Button>
                     <Button onClick={cancelEditing}>Cancel</Button>
                 </StyledDiv>
             );
         }
         else{
-            return <Button onClick={()=>setIsEditingHeader(true)}>Edit Columns</Button>
+            return <Button onClick={startEditing}>Edit Columns</Button>
         }
     }
     const makeHeader = ()=>{
         return(
             <TableHead>
+                {[].includes}
                 <TableRow>
                     {
                         headers().map((h,i)=>(
                             <StyledCell key={i}>
                                     {
-                                        isEditingHeader?
+                                        isEditing?
                                         (
                                             <Grid container direction='column'>
                                                 <Grid item>
                                                     <TextField id='standard-basic' label={'Field Name'} value={h}></TextField>
                                                 </Grid>
                                                 <Grid item>
-                                                    <Button variant='contained' color='primary'>Insert</Button>
-                                                    <Button variant='contained' color='secondary'>Delete</Button>
+                                                    <Button variant={insertButtons[i]?'outlined':'contained'} color='primary' onClick={()=>toggleButton(i,insertButtons,setInsertButtons)}>{insertButtons[i]?'Undo':'Insert'}</Button>
+                                                    <Button variant={deleteButtons[i]?'outlined':'contained'} color='secondary' onClick={()=>toggleButton(i,deleteButtons,setDeleteButtons)}>{deleteButtons[i]?'Undo':'Delete'}</Button>
                                                 </Grid>
                                             </Grid>
                                         ):
@@ -73,7 +83,7 @@ function MemberList(){
                         ))
                     }
                     <TableCell>
-                        {makeButton(isEditingHeader)}
+                        {makeButton(isEditing)}
                     </TableCell>
                 </TableRow>
             </TableHead>
