@@ -18,6 +18,7 @@ export const useList=(initialValue)=>{
     const [isEditing,setIsEditing] = useState(false);
     const startEditing=()=>{
         setIsEditing(true);
+        setTable(members.map((member)=>Object.keys(member).map((key)=>member[key])));
     };
     const cancelEditing=()=>{
         setIsEditing(false);
@@ -25,65 +26,55 @@ export const useList=(initialValue)=>{
     const headers = ()=>{
         return Object.keys(template);
     }
-    const emptyColumn=({keys,list},key)=>{
-        return{
-            key,
-            col:list.map(row=>'')
-        }
-    }
-    const getColumn=({keys,list},index)=>{
-        const key = keys[index];
-        return {
-            key,
-            col:list.map(row=>row[key])
-        };
+    const emptyColumn=(table)=>{
+        return table.map(row=>'');
     };
-    const appendColumn=({keys,list},{key,col})=>{
-        if(list.length===0){
-            
-            return{
-                keys:[...keys,key],
-                list: col.map(value=>({[key]:value}))
-            };
+    const getColumn=(table,index)=>{
+        return table.map(row=>row[index]);
+    };
+    const appendColumn=(table,col)=>{
+        if(table.length===0){
+            col.forEach((element)=>{
+                table.push([element]);
+            });
         }
-        return{
-            keys:[...keys,key],
-            list: list.map((rowObj,i)=>{
-                return {...rowObj,[key]:col[i]};
-            })
-        };  
+        else{
+            table.forEach((row,i)=>{
+                row.push(col[i]);
+            });
+        }
     };
     const saveHeaders=(insertArr,deleteArr,fieldNames)=>{
-        let table = {
-            keys:[],
-            list:[] //list of objects like members
-        }
-        const oldTable ={
-            keys:headers(),
-            list:[...members]
-        }
+        const newHeaders= [];
+        const oldTable = table;
+        const oldHeaders = headers();
+        const newTable = [];
         fieldNames.forEach((name,i)=>{
             if(insertArr[i]){
                 // if inserting, use fieldName as the new column name
-                table = appendColumn(table,emptyColumn(oldTable,name));
-                table = appendColumn(table,getColumn(oldTable,i));
+                appendColumn(newTable,emptyColumn(oldTable)); //need to reimplement empty column
+                appendColumn(newTable,getColumn(oldTable,i));
+                newHeaders.push(name);
+                newHeaders.push(oldHeaders[i]);
             }
             else if(deleteArr[i]){
                 // do nothing
             }
             else{
-                const updatedColumn = getColumn(oldTable,i);
-                updatedColumn.key = name;
-                console.log(name,{updatedColumn});
-                table = appendColumn(table,updatedColumn);
-                console.log({table});
+                appendColumn(newTable,getColumn(oldTable,i));
+                newHeaders.push(name);
             }
         });
-        setTemplate(table.keys.reduce((acc,key)=>{
+        setTemplate(newHeaders.reduce((acc,key)=>{
             acc[key] = '';
             return acc;
         },{}));
-        setMembers(table.list);
+        const newMembers = newTable.map(row=>row.reduce((acc,value,i)=>{
+            acc[newHeaders[i]] = value;
+            return acc;
+        },{})); 
+        setMembers(newMembers);
+        setLocalStorage(newMembers)
         setIsEditing(false);
     };
 

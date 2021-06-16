@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {
-    Table, TableBody,TableCell, TableContainer, TableHead, TableRow, Paper, Button, Grid, TextField
+    Table, TableBody, TableContainer,TableRow, Paper, Button
 } from '@material-ui/core';
 import Member from './Member';
+import ListHeaders from './ListHeaders';
 import {useList} from '../hooks/useList';
-import styled from 'styled-components';
 const initialValue = {
     'first name':'',
     'last name':'',
@@ -40,55 +40,33 @@ function MemberList(){
         newArr[parseInt(name)] = value;
         setFieldNames(newArr);
     };
-    const makeButton = (isEditing) =>{
-        if(isEditing){
-            return(
-                <StyledDiv>
-                    <Button onClick={()=>saveHeaders(insertButtons,deleteButtons,fieldNames)}>Save</Button>
-                    <Button onClick={cancelEditing}>Cancel</Button>
-                </StyledDiv>
-            );
-        }
-        else{
-            return <Button onClick={startEditing}>Edit Columns</Button>
-        }
-    }
-    const makeHeader = ()=>{
-        return(
-            <TableHead>
-                <TableRow>
-                    {
-                        headers().map((h,i)=>(
-                            <StyledCell key={i}>
-                                    {
-                                        isEditing?
-                                        (
-                                            <Grid container direction='column'>
-                                                <Grid item>
-                                                    <TextField name={`${i}`} label={'Field Name'} value={fieldNames[i]} onChange={handleInputChange}></TextField>
-                                                </Grid>
-                                                <Grid item>
-                                                    <Button variant={insertButtons[i]?'outlined':'contained'} color='primary' onClick={()=>toggleButton(i,insertButtons,setInsertButtons)}>{insertButtons[i]?'Undo':'Insert'}</Button>
-                                                    <Button variant={deleteButtons[i]?'outlined':'contained'} color='secondary' onClick={()=>toggleButton(i,deleteButtons,setDeleteButtons)}>{deleteButtons[i]?'Undo':'Delete'}</Button>
-                                                </Grid>
-                                            </Grid>
-                                        ):
-                                        h
-                                    }
-                            </StyledCell>
-                        ))
-                    }
-                    <TableCell>
-                        {makeButton(isEditing)}
-                    </TableCell>
-                </TableRow>
-            </TableHead>
-        );
+    const handleSave=()=>{
+        saveHeaders(insertButtons,deleteButtons,fieldNames);
+        setInsertButtons(headers().map((h)=>false));
+        setDeleteButtons(headers().map((h)=>false));
     };
+    const handleStartEditing=()=>{
+        startEditing();
+        setFieldNames(headers());
+    };
+
     return(
         <TableContainer component={Paper}>
             <Table aria-label='simple table'>
-                {makeHeader()}
+                <ListHeaders 
+                    headers={headers}
+                    isEditing={isEditing}
+                    toggleButton={toggleButton}
+                    insertButtons={insertButtons}
+                    setInsertButtons={setInsertButtons}
+                    deleteButtons={deleteButtons}
+                    setDeleteButtons={setDeleteButtons}
+                    handleInputChange={handleInputChange}
+                    fieldNames={fieldNames}
+                    handleSave={handleSave}
+                    cancelEditing={cancelEditing}
+                    handleStartEditing={handleStartEditing}
+                />
                 <TableBody>
                     {
                         members.map((member,i)=>(
@@ -99,16 +77,8 @@ function MemberList(){
                     }
                 </TableBody>
             </Table>
-            <Button onClick={addNewRow}>New</Button>
+            <Button size='small' variant='contained' onClick={addNewRow}>New</Button>
         </TableContainer>
     );
 }
 export default MemberList;
-const StyledCell = styled(TableCell)`
-    text-transform:capitalize;
-    font-weight:bold;
-`;
-const StyledDiv=styled.div`
-    display:flex;
-    flex-direction:column;
-`;
