@@ -1,17 +1,20 @@
 import React from 'react';
 import {
     Button,
-    TextField,
     Grid,
     TableHead,
     TableRow,
     TableCell
 } from '@material-ui/core';
 import styled from 'styled-components';
+import HeaderControls from './HeaderControls';
 const ListHeaders=(props)=>{
     const {
         headers,
         isEditing,
+        handleSave,
+        cancelEditing,
+        handleStartEditing,
         toggleButton,
         insertButtons,
         setInsertButtons,
@@ -19,29 +22,33 @@ const ListHeaders=(props)=>{
         setDeleteButtons,
         handleInputChange,
         fieldNames,
-        handleSave,
-        cancelEditing,
-        handleStartEditing
     } = props;
     const makeHeader=(i,fieldName)=>{
         return(
             <StyledCell key={i}>
-            {
-                isEditing?
-                (
-                    <Grid container direction='column'>
-                        <Grid item>
-                            <TextField size='small' name={`${i}`} label={'Field Name'} value={fieldNames[i]} onChange={handleInputChange}></TextField>
-                        </Grid>
-                        <Grid item>
-                            <StyledButton size='small' variant={insertButtons[i]?'outlined':'contained'} color='primary' onClick={()=>toggleButton(i,insertButtons,setInsertButtons)}>{insertButtons[i]?'Undo':'Insert'}</StyledButton>
-                            <StyledButton size='small' variant={deleteButtons[i]?'outlined':'contained'} color='secondary' onClick={()=>toggleButton(i,deleteButtons,setDeleteButtons)}>{deleteButtons[i]?'Undo':'Delete'}</StyledButton>
-                            <StyledButton size='small' variant={deleteButtons[i]?'outlined':'contained'} color='inherit'>{deleteButtons[i]?'Undo':'Edit'}</StyledButton>
-                        </Grid>
+                <Grid container direction='column'>
+                    <Grid item>
+                        {fieldName}                
                     </Grid>
-                ):
-                fieldName
-            }
+                    <Grid item>
+                        {
+                            isEditing?
+                            <HeaderControls 
+                                i={i}
+                                toggleButton={toggleButton}
+                                insertButtons={insertButtons}
+                                setInsertButtons={setInsertButtons}
+                                deleteButtons={deleteButtons}
+                                setDeleteButtons={setDeleteButtons}
+                                handleInputChange={handleInputChange}
+                                fieldNames={fieldNames}
+                                StyledButton={StyledButton}
+                            />
+                            :
+                            ''
+                        }
+                    </Grid>
+                </Grid>
             </StyledCell>
         );
     }
