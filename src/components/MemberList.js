@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {
     Table, TableBody, TableContainer,TableRow, Paper, Button
 } from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 import Member from './Member';
 import ListHeaders from './ListHeaders';
 import {useList} from '../hooks/useList';
@@ -13,7 +14,22 @@ const initialValue = {
     role:'',
     hobby:''
   };
+const initialTeam = [
+    {
+        'first name':'Chris',
+        'last name': 'Lau',
+        email:'chrislyc.lau@gmail.com',
+        role:'Full Stack Developer',
+        hobby:'Biking'
+    }
+];
+const useStyles = makeStyles({
+    table:{
+        backgroundColor:'rgb(221, 221, 221,0.85)'
+    }
+});
 function MemberList(){
+    const classes = useStyles();
     const [
         members,
         editIndex,
@@ -26,7 +42,7 @@ function MemberList(){
         startEditing,
         cancelEditing,
         saveHeaders
-    ] = useList(initialValue);
+    ] = useList(initialValue,initialTeam);
     const [insertButtons, setInsertButtons] = useState(()=>headers().map((h)=>false));
     const [deleteButtons, setDeleteButtons] = useState(()=>headers().map((h)=>false));
     const [fieldNames, setFieldNames] = useState(headers());
@@ -52,7 +68,7 @@ function MemberList(){
     };
 
     return(
-        <StyledTableContainer component={Paper}>
+        <TableContainer component={Paper} className={classes.table}>
             <Table aria-label='simple table'>
                 <ListHeaders 
                     headers={headers}
@@ -79,10 +95,7 @@ function MemberList(){
                 </TableBody>
             </Table>
             <Button size='small' variant='contained' onClick={addNewRow}>New</Button>
-        </StyledTableContainer>
+        </TableContainer>
     );
 }
 export default MemberList;
-const StyledTableContainer=styled(TableContainer)`
-    background-color: rgb(221, 221, 221,0.85);
-`;

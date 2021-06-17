@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useLocalStorage} from './useLocalStorage';
-export const useList=(initialValue)=>{
-    const [localStorage, setLocalStorage] = useLocalStorage('team-builder-app',[])
+export const useList=(initialValue,initialTeam)=>{
+    const [localStorage, setLocalStorage] = useLocalStorage('team-builder-app',initialTeam)
     const [localStorageTemplate, setLocalStorageTemplate] = useLocalStorage('team-builder-app-template',initialValue);
     const [members, setMembers] = useState(localStorage);
         // ()=>{
