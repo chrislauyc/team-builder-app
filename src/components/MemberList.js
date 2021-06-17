@@ -6,7 +6,6 @@ import {makeStyles} from '@material-ui/core/styles';
 import Member from './Member';
 import ListHeaders from './ListHeaders';
 import {useList} from '../hooks/useList';
-import styled from 'styled-components';
 const initialValue = {
     'first name':'',
     'last name':'',
