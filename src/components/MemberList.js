@@ -5,6 +5,7 @@ import {
 import Member from './Member';
 import ListHeaders from './ListHeaders';
 import {useList} from '../hooks/useList';
+import styled from 'styled-components';
 const initialValue = {
     'first name':'',
     'last name':'',
@@ -51,7 +52,7 @@ function MemberList(){
     };
 
     return(
-        <TableContainer component={Paper}>
+        <StyledTableContainer component={Paper}>
             <Table aria-label='simple table'>
                 <ListHeaders 
                     headers={headers}
@@ -78,7 +79,10 @@ function MemberList(){
                 </TableBody>
             </Table>
             <Button size='small' variant='contained' onClick={addNewRow}>New</Button>
-        </TableContainer>
+        </StyledTableContainer>
     );
 }
 export default MemberList;
+const StyledTableContainer=styled(TableContainer)`
+    background-color: rgb(221, 221, 221,0.85);
+`;
