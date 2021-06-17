@@ -2,19 +2,22 @@ import {useState} from 'react';
 import {useLocalStorage} from './useLocalStorage';
 export const useList=(initialValue)=>{
     const [localStorage, setLocalStorage] = useLocalStorage('team-builder-app',[])
-    const [members, setMembers] = useState(()=>{
+    const [localStorageTemplate, setLocalStorageTemplate] = useLocalStorage('team-builder-app-template',initialValue);
+    const [members, setMembers] = useState(localStorage);
+        // ()=>{
             // only take attributes present in initialValue 
-            return localStorage.map((item)=>Object.keys(initialValue).reduce((acc,key,i)=>{
-                acc[key] = item[key];
-                return acc;
-            },{}));
-        }
-    );
+            // return localStorage.map((item)=>Object.keys(initialValue).reduce((acc,key,i)=>{
+            //     acc[key] = item[key];
+            //     return acc;
+            // },{}));
+
+        // }
+    
     const [table,setTable] = useState(()=>{
         return localStorage.map((item)=>Object.keys(initialValue).map((key)=>item[key]));
     });
     const [editIndex, setEditIndex] = useState(null);
-    const [template, setTemplate] = useState(initialValue);
+    const [template, setTemplate] = useState(localStorageTemplate);
     const [isEditing,setIsEditing] = useState(false);
     const startEditing=()=>{
         setIsEditing(true);
@@ -65,16 +68,18 @@ export const useList=(initialValue)=>{
                 newHeaders.push(name);
             }
         });
-        setTemplate(newHeaders.reduce((acc,key)=>{
+        const newTemplate = newHeaders.reduce((acc,key)=>{
             acc[key] = '';
             return acc;
-        },{}));
+        },{});
         const newMembers = newTable.map(row=>row.reduce((acc,value,i)=>{
             acc[newHeaders[i]] = value;
             return acc;
         },{})); 
         setMembers(newMembers);
-        setLocalStorage(newMembers)
+        setTemplate(newTemplate);
+        setLocalStorage(newMembers);
+        setLocalStorageTemplate(newTemplate);
         setIsEditing(false);
     };
 
