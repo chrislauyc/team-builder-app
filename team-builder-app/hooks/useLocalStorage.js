@@ -1,32 +1,25 @@
-import React, {useState} from 'react';
+import {useState, useEffect} from 'react';
 export const useLocalStorage=(key,initialValue)=>{
-    const [storedValue,setStoredValue] = useState(()=>{
-        const item = React.window.localStorage.getItem(key)
+    const [storedValue,setStoredValue] = useState(null);
+    useEffect(()=>{
+        const item = window.localStorage.getItem(key)
         if(item){
             let parsedItem;
             try{
                 parsedItem = JSON.parse(item);
+                setStoredValue(parsedItem);
             }
             catch(err){
                 console.log(err);
             }
-            if(parsedItem){
-                return parsedItem;
-            }
-            else{
-                
-                console.log('Unable to parse string: ',item);
-                React.window.localStorage.removeItem(key);
-                return initialValue;
-            }
         }    
         else{
-            return initialValue;
+            setStoredValue(initialValue);
         }
-    });
+    },[]);
     const setValue=(value)=>{
         setStoredValue(value);
-        React.window.localStorage.setItem(key,JSON.stringify(value));
+        window.localStorage.setItem(key,JSON.stringify(value));
     }
     return [storedValue,setValue];
 };
